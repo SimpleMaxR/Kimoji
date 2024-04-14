@@ -1,17 +1,22 @@
 package com.hugo.kimoji
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,20 +24,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hugo.kimoji.ui.theme.KimojiTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-//            KimojiTheme {
-//                // A surface container using the 'background' color from the theme
-////                Surface(
-////                    modifier = Modifier.fillMaxSize(),
-////                    color = MaterialTheme.colorScheme.background
-////                ) {
-////                    Greeting("Android")
-////                }
-//            }
+            KimojiTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    DiaryCard(Diary("Joy", "I use md now!"))
+                }
+            }
 
         }
     }
@@ -40,8 +45,9 @@ class MainActivity : ComponentActivity() {
 
 data class Diary(val emotion: String, val notes: String)
 
+
 @Composable
-fun DairyCard(diary: Diary ) {
+fun DiaryCard(diary: Diary ) {
     Row(modifier = Modifier.padding(all = 8.dp)) {
         Image(
             painter = painterResource(id = R.drawable.hardworking),
@@ -49,24 +55,47 @@ fun DairyCard(diary: Diary ) {
             modifier = Modifier
                 .size(45.dp)
                 .clip(CircleShape)
+                .border(1.5.dp, MaterialTheme.colorScheme.secondary, CircleShape)
         )
 
         Spacer(modifier = Modifier.width(8.dp))
 
         Column {
-            Text(text = diary.emotion)
+            Text(
+                text = diary.emotion,
+                color = MaterialTheme.colorScheme.secondary
+            )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = diary.notes)
+
+            Surface(shape = MaterialTheme.shapes.small, shadowElevation = 1.dp, tonalElevation = 1.dp) {
+                Text(
+                    text = diary.notes,
+                    modifier = Modifier.padding(all = 4.dp),
+                    style = MaterialTheme.typography.bodyMedium
+
+                )
+            }
+
         }
     }
 
 
 }
-
-@Preview(showSystemUi = false)
+@Preview(name = "Light Mode")
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true,
+    name = "Dark Mode"
+)
 @Composable
-fun PreviewDairyCard() {
-    DairyCard(diary = Diary("Excellent", "I learn Android develop today."))
+fun PreviewDiaryCard() {
+    KimojiTheme {
+        Surface {
+            DiaryCard(diary = Diary("Joy", "Now it show with material design!"))
+        }
+    }
+
+//    DiaryCard(diary = Diary("Joy", "Now it show with material design!"))
 }
 
 //@Composable
